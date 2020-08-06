@@ -1,15 +1,20 @@
 <template>
-    <div>
-        
-    </div>
+    <header class="header">
+        <h1>Digital Guest</h1>
+    </header>
 </template>
 
 <script>
     export default {
-        
+        name:"Header"
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+    .header {
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 1px;
+    }
 </style>
