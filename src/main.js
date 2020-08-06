@@ -3,9 +3,11 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 import firebase from 'firebase/app'
+import VueSimpleAlert from 'vue-simple-alert'
 
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
+Vue.use(VueSimpleAlert);
 
 const firebaseConfig = {
   apiKey: "AIzaSyAsXNojFGm3Epc3LaZvFFdX2NWJZQKkvbY",
@@ -19,7 +21,15 @@ const firebaseConfig = {
 
   firebase.initializeApp(firebaseConfig);
 
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+  let app;
+
+  firebase.auth().onAuthStateChanged(user=> {
+    console.log(user);
+    if(!app) {
+      app = new Vue({
+        router,
+        render: h => h(App)
+      }).$mount('#app')
+    }
+  })
+

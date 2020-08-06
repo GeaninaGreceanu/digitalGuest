@@ -3,19 +3,14 @@
         <Header/>
         <form @submit.prevent="signUp">
             <h2>Welcome to Digital Guest - Sign Up Page!</h2>
-            <div class="email">
-                <input type="email" v-model="email" placeholder="e-mail"/>
-            </div>
-            <div class="password">
-                <input type="password" v-model="password" placeholder="password"/>
-            </div>
-            <button type="submit">Sign Up</button>
-        </form>
-        <p>{{error}}</p>
-        <div class="logInUser">
+            <input class="infoField" type="email" v-model="email" placeholder="Enter E-mail address"/>
+            <input class="infoField" type="password" v-model="password" placeholder="Enter password"/>
+            <input class="infoField" type="password" v-model="password2" placeholder="Re-enter password"/>
+            <br/>
+            <button class="btn" type="submit">Sign Up</button>
             <h3>Already registered?</h3>
-            <button @click="goToLogin">Log In</button>
-        </div>
+            <button class="btn loginbtn" @click="goToLogin">Log In</button>
+        </form>
     </div>
 </template>
 
@@ -26,14 +21,21 @@ import "firebase/auth";
     export default {
         methods: {
             async signUp() {
-                try {
-                    await firebase.auth().createUserWithEmailAndPassword(this.email, this.password);
-                    //console.log(result);
-                    //this.error = error;
-                    this.$router.replace({name: "user"});
-                }catch(err) {
-                    console.log(err);
-                    this.error = err;
+                if(this.password === this.password2) {
+                    var self = this;
+                    await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                    .then(function() {
+                        self.$router.replace({name: "user"});
+                    })
+                    .catch(function(error) {
+                        self.email = "";
+                        self.password = "";
+                        self.password2 = "";
+                        self.$alert(error.message);
+                    });
+                    
+                } else {
+                    this.$alert("Passwords don't match");
                 }
             },
             goToLogin() {
@@ -44,7 +46,7 @@ import "firebase/auth";
             return {
                 email: "",
                 password: "",
-                error: ""
+                password2: ""
 
             }
         },
@@ -52,6 +54,9 @@ import "firebase/auth";
     }
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.loginbtn {
+    background: linear-gradient(to right, darkgrey, lightgrey);
+    color: black;
+    }
 </style>
